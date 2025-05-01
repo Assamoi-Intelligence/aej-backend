@@ -6,6 +6,10 @@ import { MulterModule } from '@nestjs/platform-express';
 import { MulterOptions } from '@nestjs/platform-express/multer/interfaces/multer-options.interface';
 import { diskStorage } from 'multer';
 import { extname, join } from 'path';
+import { EmailService } from './email.service';
+import { XlsxService } from './xlsx.service';
+import { PdfService } from './pdf.service';
+import { MailerModule } from '@nestjs-modules/mailer';
 
 const multerConfig: MulterOptions = {
   limits: {fieldSize: 5*1024*1024},
@@ -30,12 +34,23 @@ const multerConfig: MulterOptions = {
   })
 }
 
+
 @Module({
   imports: [
+    MailerModule.forRoot({
+      transport: {
+        host: process.env.EMAIL_HOST,
+        auth: {
+          user: process.env.EMAIL_USERNAME,
+          pass: process.env.EMAIL_PASSWORD,
+        },
+        secure: false
+      },
+    }),
     MulterModule.register(multerConfig),
     PrismaModule
   ],
   controllers: [ProjectsController],
-  providers: [ProjectsService, ],
+  providers: [ProjectsService, EmailService, XlsxService, PdfService],
 })
 export class ProjectsModule {}
