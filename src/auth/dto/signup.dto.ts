@@ -4,7 +4,4 @@ export class SignUpDto {
     email: string;
     @IsString()
     password: string;
-    @IsString()
-    @IsIn(['AMAZONE', 'ADMIN'])
-    role: string;
 }
