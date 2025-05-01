@@ -7,6 +7,7 @@ import { ConfigModule } from '@nestjs/config';
 import { AuthModule } from './auth/auth.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
+import { EmailService } from './email/email.service';
 
 @Module({
   imports: [
@@ -20,6 +21,6 @@ import { join } from 'path';
     ConfigModule.forRoot({isGlobal: true})
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, EmailService],
 })
 export class AppModule {}

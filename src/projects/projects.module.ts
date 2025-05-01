@@ -5,7 +5,7 @@ import { PrismaModule } from 'src/prisma/prisma.module';
 import { MulterModule } from '@nestjs/platform-express';
 import { MulterOptions } from '@nestjs/platform-express/multer/interfaces/multer-options.interface';
 import { diskStorage } from 'multer';
-import { extname } from 'path';
+import { extname, join } from 'path';
 
 const multerConfig: MulterOptions = {
   limits: {fieldSize: 5*1024*1024},
@@ -22,7 +22,7 @@ const multerConfig: MulterOptions = {
     }
   },
   storage: diskStorage({
-    destination: '../uploads',
+    destination: join(__dirname, '..', 'uploads'),
     filename: (req, file, callback) => {
         const uniqSuffix =  Date.now() + '-' + Math.round(Math.random() * 1e9);
         callback(null, `${file.fieldname}-${uniqSuffix}${extname(file.originalname)}`);
