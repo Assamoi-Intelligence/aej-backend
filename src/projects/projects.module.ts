@@ -10,6 +10,9 @@ import { EmailService } from './email.service';
 import { XlsxService } from './xlsx.service';
 import { PdfService } from './pdf.service';
 import { MailerModule } from '@nestjs-modules/mailer';
+import { JwtService } from '@nestjs/jwt';
+
+const UPLOAD_DIR = join(process.cwd(), 'uploads');
 
 const multerConfig: MulterOptions = {
   limits: {fieldSize: 5*1024*1024},
@@ -26,7 +29,7 @@ const multerConfig: MulterOptions = {
     }
   },
   storage: diskStorage({
-    destination: join(__dirname, '..', 'uploads'),
+    destination: join(UPLOAD_DIR),
     filename: (req, file, callback) => {
         const uniqSuffix =  Date.now() + '-' + Math.round(Math.random() * 1e9);
         callback(null, `${file.fieldname}-${uniqSuffix}${extname(file.originalname)}`);
@@ -51,6 +54,6 @@ const multerConfig: MulterOptions = {
     PrismaModule
   ],
   controllers: [ProjectsController],
-  providers: [ProjectsService, EmailService, XlsxService, PdfService],
+  providers: [ProjectsService, EmailService, XlsxService, PdfService, JwtService],
 })
 export class ProjectsModule {}

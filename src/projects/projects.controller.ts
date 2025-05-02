@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, UploadedFiles, Res } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, UploadedFiles, Res, UseGuards } from '@nestjs/common';
 import { ProjectsService } from './projects.service';
 import { CreateProjectDto } from './dto/create-project.dto';
 import { UpdateProjectDto } from './dto/update-project.dto';
@@ -7,6 +7,7 @@ import { EmailService } from './email.service';
 import { XlsxService } from './xlsx.service';
 import { PdfService } from './pdf.service';
 import { Response } from 'express';
+import { AuthGuard } from 'src/auth/auth.guard';
 
 @Controller('projects')
 export class ProjectsController {
@@ -37,16 +38,19 @@ export class ProjectsController {
       return project;
   }
 
+  @UseGuards(AuthGuard)
   @Get()
   findAll() {
     return this.projectsService.findAll();
   }
 
+  @UseGuards(AuthGuard)
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.projectsService.findOne(id);
   }
 
+  @UseGuards(AuthGuard)
   @Patch(':id')
   async update(@Param('id') id: string, @Body() updateProjectDto: UpdateProjectDto) {
     const project = await this.projectsService.update(id, updateProjectDto);
@@ -56,17 +60,14 @@ export class ProjectsController {
   }
 
 
-  @Get('xlsx')
-  getExcel() {
-    return "";
-  } 
-
+  @UseGuards(AuthGuard)
   @Get(':id/pdf')
   async downloadPdf(@Param('id') id: string, @Res() res: Response) {
     const project = await this.projectsService.findOne(id);
     return this.pdfService.generateProjectPdf(project, res);
   }
 
+  @UseGuards(AuthGuard)
   @Get('export/excel')
   async downloadExcel(@Res() res: Response) {
     const all = await this.projectsService.findAll();
