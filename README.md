@@ -60,7 +60,7 @@ Suivez ces étapes pour installer le projet en local :
 ```bash
 # 1. Cloner le dépôt
 git clone https://github.com/Assamoi-Intelligence/aej-backend.git
-cd backend
+cd aej-backend
 
 # 2. Créer le dossier 'uploads' pour les fichiers uploadés
 mkdir uploads
