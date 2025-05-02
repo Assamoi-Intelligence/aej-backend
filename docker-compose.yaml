@@ -13,6 +13,11 @@ services:
       - postgres:/var/lib/postgresql/data
     networks:
       - aej
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
   
   pgadmin:
     image: dpage/pgadmin4
@@ -26,9 +31,27 @@ services:
       - db
     networks:
       - aej
+  
+  backend:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    container_name: aej-backend
+    restart: always
+    ports:
+      - 3000:3000
+    env_file: .env
+    depends_on:
+      - db
+    volumes:
+      - ./uploads:/app/uploads
+    networks:
+      - aej
 
 networks:
   aej:
 
 volumes:
   postgres:
+
+
